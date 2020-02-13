@@ -1,0 +1,42 @@
+body {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.currentDiff {
+  text-align: center;
+  margin: 20px 0;
+}
+
+.noDiff {
+  text-align: center;
+  margin: 20px 0;
+}
+
+table {
+  width: 100%;
+  margin-top: 20px;
+}
+
+th {
+  text-align: center;
+}
+
+td {
+  border-bottom: 1px solid #444;
+  text-align: center;
+}
+
+.night {
+  background-color: #343a40;
+  color: white;
+}
+.awake {
+  background-color: #17a2b8;
+  color: white;
+}
+.working {
+  background-color: #4582EC;
+  color: white;
+}
