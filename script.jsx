@@ -53,8 +53,11 @@ class App extends React.Component {
   _renderOffsets() {
     return (
       <div>
-        <h4 className='currentDiff'>{this.state.firstTimezone} is currently {this._diffTextFor(this.state.currentOffset)} {this.state.secondTimezone}</h4>
-
+        <h4 className='currentDiff'>
+          <span className='currentTimeTooltip' title={this._timeFor(this.state.firstTimezone)}>{this.state.firstTimezone}</span>
+          { ' ' }is currently {this._diffTextFor(this.state.currentOffset)}
+          { ' ' }<span className='currentTimeTooltip' title={this._timeFor(this.state.secondTimezone)}>{this.state.secondTimezone}</span>
+        </h4>
         { this.state.offsets.length > 0 ? this._renderTimeline() : <h4 className='noDiff'>These timezones do not differ in the next 5 years</h4> }
       </div>
     )
@@ -203,6 +206,11 @@ class App extends React.Component {
     var t1 = moment.tz.zone(timezoneOne).utcOffset(time);
     var t2 = moment.tz.zone(timezoneTwo).utcOffset(time);
     return (t2 - t1) / 60;
+  }
+
+  _timeFor(timezone) {
+    return moment().tz(timezone).format('ddd Do LT');
+
   }
 }
 

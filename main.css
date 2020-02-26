@@ -40,3 +40,7 @@ td {
   background-color: #4582EC;
   color: white;
 }
+.currentTimeTooltip {
+  text-decoration: underline;
+  text-decoration-color: rgba(69, 130, 236, 0.5);
+}
