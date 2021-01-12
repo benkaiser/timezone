@@ -12,7 +12,6 @@ for(var i = 0; i < 24; i++){
     label
   });
 }
-console.log('Handle');
 
 class App extends React.Component {
   constructor() {
@@ -39,6 +38,10 @@ class App extends React.Component {
     }
   }
 
+  componentDidMount() {
+    this._rerenderNextMinute();
+  }
+
   render() {
     return (
       <div>
@@ -51,16 +54,40 @@ class App extends React.Component {
   }
 
   _renderOffsets() {
+    const [timeOne, timeTwo] = this._getTimesSimplest();
+    this._updateDocumentTitle();
     return (
       <div>
         <h4 className='currentDiff'>
-          <span className='currentTimeTooltip' title={this._timeFor(this.state.firstTimezone)}>{this.state.firstTimezone}</span>
+          {this.state.firstTimezone} ({timeOne})
           { ' ' }is currently {this._diffTextFor(this.state.currentOffset)}
-          { ' ' }<span className='currentTimeTooltip' title={this._timeFor(this.state.secondTimezone)}>{this.state.secondTimezone}</span>
+          { ' ' }{this.state.secondTimezone} ({timeTwo})
         </h4>
         { this.state.offsets.length > 0 ? this._renderTimeline() : <h4 className='noDiff'>These timezones do not differ in the next 5 years</h4> }
       </div>
     )
+  }
+
+  _updateDocumentTitle() {
+    const [timeOne, timeTwo] = this._getTimesSimplest();
+    const localTime = moment().format();
+    if (localTime === moment().tz(this.state.firstTimezone).format()) {
+      document.title = `${this.state.secondTimezone} ${timeTwo}`;
+    } else if (localTime === moment().tz(this.state.secondTimezone).format()) {
+      document.title = `${this.state.firstTimezone} ${timeOne}`;
+    } else {
+      document.title = `${this.state.firstTimezone} ${timeOne} - ${this.state.secondTimezone} ${timeTwo}`;
+    }
+  }
+
+  _getTimesSimplest() {
+    const tz1 = moment().tz(this.state.firstTimezone);
+    const tz2 = moment().tz(this.state.secondTimezone);
+    let format = 'ddd Do LT';
+    if (tz1.format('D') == tz2.format('D')) {
+      format = 'LT';
+    }
+    return [tz1.format(format), tz2.format(format)];
   }
 
   _renderTimeline() {
@@ -208,9 +235,13 @@ class App extends React.Component {
     return (t2 - t1) / 60;
   }
 
-  _timeFor(timezone) {
-    return moment().tz(timezone).format('ddd Do LT');
-
+  _rerenderNextMinute() {
+    const timeUntilNextMinute = (60 - moment().format('s') + 1) * 1000;
+    console.log('Waiting for re-render: ' + timeUntilNextMinute);
+    setTimeout(() => {
+      this.forceUpdate();
+      this._rerenderNextMinute();
+    }, timeUntilNextMinute);
   }
 }
 
