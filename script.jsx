@@ -27,14 +27,19 @@ class App extends React.Component {
         this.state = {
           firstTimezone: firstTimezoneInUrl,
           secondTimezone: secondTimezoneInUrl,
+          expandOffset: 0,
           currentOffset: this._offsetForTime(firstTimezoneInUrl, secondTimezoneInUrl, moment.utc()),
           offsets: this._generateOffsets(firstTimezoneInUrl, secondTimezoneInUrl)
         };
       } catch (_) {
-        this.state = {};
+        this.state = {
+          expandOffset: 0
+        };
       }
     } else {
-      this.state = {};
+      this.state = {
+        expandOffset: 0
+      };
     }
   }
 
@@ -224,6 +229,15 @@ class App extends React.Component {
           offset: newOffset
         };
       }
+    }
+    if (offsets.length === 0) {
+      offsets.push({
+        startLabel: startMark.label,
+        startTime: startMark.time,
+        endLabel: 'Forever',
+        entTime: 0,
+        offset: startMark.offset
+      });
     }
     console.log(offsets);
     return offsets;
